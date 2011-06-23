@@ -1,0 +1,22 @@
+task :default => [:test]
+
+task :test do
+  ruby 'test/finder_test.rb' 
+end
+
+task :benchmark do
+  require "benchmark"
+  $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
+  require "readable_finder"
+  require "fast_finder"
+  require "binary_finder"
+  
+  # A list of words can be found at /usr/share/dict on Unix systems
+  words = File.readlines('bin/small_word_list.txt').map(&:chomp)
+  
+  Benchmark.bm(7) do |x|
+    x.report("Readable:")   { ReadableFinder.find(words) }
+    x.report("Fast:    ")   { FastFinder.find(words) }
+    x.report("Binary:  ")   { BinaryFinder.find(words) }
+  end
+end
