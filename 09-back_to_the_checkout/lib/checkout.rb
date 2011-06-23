@@ -1,4 +1,7 @@
 class Checkout
+  attr_accessor :pricing
+  attr_reader :products
+  
   def initialize(pricing)
     @pricing = pricing
     @products = Hash.new(0)
@@ -11,7 +14,7 @@ class Checkout
       end
     end
 
-    total
+    self
   end
   
   def total
