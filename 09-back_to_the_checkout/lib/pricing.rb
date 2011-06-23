@@ -1,12 +1,13 @@
 class Pricing
-  def initialize(rule)
-    @rule = rule
-    
-    sort_rule!
+  attr_accessor :parser, :rules
+  
+  def initialize(rules, parser = HashParser.new)
+    @parser = parser
+    @rules = @parser.parse rules
   end
   
   def price(sku, qty = 1)
-    deals         = @rule[sku]
+    deals         = @rules[sku]
     remaining_qty = qty
   
     deals.inject(0) do |sum, deal|
@@ -17,10 +18,6 @@ class Pricing
   end
 
   private
-    def sort_rule!
-      @rule.each{|sku, pricing| @rule[sku] = pricing.sort{|a,b| b.first <=> a.first}}
-    end
-    
     def find_best_combination_for desired_qty, deal
       deal_qty, deal_price = deal
       number_of_deals = desired_qty / deal_qty
