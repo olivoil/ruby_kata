@@ -12,8 +12,8 @@ class AnagramFinder
   def find_anagrams!
     @dictionary.each do |word|
       index = sort_to_sym(word)
-      @anagrams[sort_to_sym(word)] << word
-      @longest = sort_to_sym(word) if @longest.length < word.length && @anagrams[index].length > 1
+      @anagrams[index] << word
+      @longest = index if @longest.length < word.length && @anagrams[index].length > 1
     end
     
     @anagrams.reject!{ |index, words| words.length <= 1}
