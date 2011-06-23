@@ -10,38 +10,38 @@ describe Checkout do
   
   let(:checkout) { Checkout.new(pricing) }
   
-  describe "totals" do
+  describe "individual scans" do
     context "with individual products" do
-      specify { checkout.price('').should == 0 }
-      specify { checkout.price('A').should == 50 }
-      specify { checkout.price('AB').should == 80 }
-      specify { checkout.price('CDBA').should == 115 }
+      specify { checkout.scan('').should == 0 }
+      specify { checkout.scan('A').should == 50 }
+      specify { checkout.scan('A,B').should == 80 }
+      specify { checkout.scan('C,D,B,A').should == 115 }
     end
 
     context "with repeated products" do
-      specify { checkout.price('AA').should == 100 }
-      specify { checkout.price('AAA').should == 130 }
-      specify { checkout.price('AAAA').should == 180 }
-      specify { checkout.price('AAAAA').should == 230 }
-      specify { checkout.price('AAAAAA').should == 260 }
+      specify { checkout.scan('A,A').should == 100 }
+      specify { checkout.scan('A,A,A').should == 130 }
+      specify { checkout.scan('A,A,A,A').should == 180 }
+      specify { checkout.scan('A,A,A,A,A').should == 230 }
+      specify { checkout.scan('A,A,A,A,A,A').should == 260 }
     end
 
     context "with combinations of products" do
-      specify { checkout.price('AAAB').should == 160 }
-      specify { checkout.price('AAABB').should == 175 }
-      specify { checkout.price('AAABBD').should == 190 }
-      specify { checkout.price('DABABA').should == 190 }
+      specify { checkout.scan('A,A,A,B').should == 160 }
+      specify { checkout.scan('A,A,A,B,B').should == 175 }
+      specify { checkout.scan('A,A,A,B,B,D').should == 190 }
+      specify { checkout.scan('D,A,B,A,B,A').should == 190 }
     end
   end
   
-  describe "scan" do
-    it "increments totals at each scan" do
+  describe "incremental scans" do
+    it "increments total at each scan" do
       checkout.total.should == 0
-      checkout.price('A').should == 50
-      checkout.price('B').should == 80
-      checkout.price('A').should == 130
-      checkout.price('A').should == 160
-      checkout.price('B').should == 175
+      checkout.scan('A').should == 50
+      checkout.scan('B').should == 80
+      checkout.scan('A').should == 130
+      checkout.scan('A').should == 160
+      checkout.scan('B').should == 175
     end
   end
 end

@@ -4,13 +4,14 @@ class Checkout
     @products = Hash.new(0)
   end
   
-  def price(skus)
-    skus.split(//).each { |sku| scan(sku) }
+  def scan(*skus)
+    skus.each do |sku|
+      sku.split(',').each do |sku|
+        @products[sku] += 1
+      end
+    end
+
     total
-  end
-  
-  def scan(sku)
-    @products[sku] += 1
   end
   
   def total
