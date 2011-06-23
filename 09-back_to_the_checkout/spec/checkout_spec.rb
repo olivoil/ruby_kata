@@ -1,12 +1,15 @@
 require 'spec_helper'
 
 describe Checkout do
-  hash_rule = {'A' => {1 => 50, 3 => 130}, 'B' => {1 => 30, 2 => 45}, 'C' => {1 => 20}, 'D' => {1 => 15}}   
-  parsers = { HashParser => hash_rule, YAMLParser => File.join(File.dirname(__FILE__), '..', 'bin', 'rules.yml') }
+  
+  # parsers #parse method must return rules in the following format
+  hash_rules = {'A' => {1 => 50, 3 => 130}, 'B' => {1 => 30, 2 => 45}, 'C' => {1 => 20}, 'D' => {1 => 15}}   
+  
+  parsers = { HashParser => hash_rules, YAMLParser => File.join(File.dirname(__FILE__), '..', 'bin', 'rules.yml') }
 
   parsers.each do |parser, rule|
     describe "with #{parser}" do
-      let(:pricing) { Pricing.new(rule, parser.new) }
+      let(:pricing) { Pricing.new(parser, rule) }
       let(:checkout) { Checkout.new(pricing) }
     
       describe "individual scans" do

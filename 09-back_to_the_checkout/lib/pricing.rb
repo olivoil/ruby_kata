@@ -1,9 +1,9 @@
 class Pricing
   attr_accessor :parser, :rules
   
-  def initialize(rules, parser = HashParser.new)
-    @parser = parser
-    @rules = @parser.parse rules
+  def initialize(parser = HashParser, rules)
+    @parser = parser.new
+    @rules  = sort_rules @parser.parse(rules)
   end
   
   def price(sku, qty = 1)
@@ -23,5 +23,13 @@ class Pricing
       number_of_deals = desired_qty / deal_qty
       
       [number_of_deals * deal_qty, number_of_deals * deal_price]
+    end
+    
+    def sort_rules(hash)
+      hash.inject({}) do |hash, rule|
+        sku, pricing = rule
+        hash[sku] = pricing.sort{ |a,b| b.first <=> a.first }
+        hash
+      end
     end
 end
