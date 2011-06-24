@@ -16,9 +16,9 @@ class JSONParser
     end
     
     def numerize_hash_keys(hash)
-      hash.inject({}) do |h, qty_value|
-        qty, value = qty_value
-        h[qty.to_i] = value
+      hash.inject({}) do |h, key_value|
+        key, value = key_value
+        h[key.to_i] = value
         h
       end
     end
