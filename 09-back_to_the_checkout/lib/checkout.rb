@@ -2,8 +2,8 @@ class Checkout
   attr_accessor :pricing
   attr_reader :products
   
-  def initialize(pricing)
-    @pricing = pricing
+  def initialize(rules, parser = nil)
+    @pricing = Pricing.new(rules, parser)
     @products = Hash.new(0)
   end
   
