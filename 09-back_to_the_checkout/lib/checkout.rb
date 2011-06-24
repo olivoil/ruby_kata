@@ -18,8 +18,8 @@ class Checkout
   end
   
   def total
-    @products.inject(0) do |sum, sku_qty| 
-      sku, qty = sku_qty
+    @products.inject(0) do |sum, sku_and_qty| 
+      sku, qty = sku_and_qty
       sum += @pricing.price(sku, qty)
     end
   end

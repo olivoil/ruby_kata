@@ -5,11 +5,15 @@ describe Checkout do
   # parsers #parse method must return rules in the following format
   hash_rules = {'A' => {1 => 50, 3 => 130}, 'B' => {1 => 30, 2 => 45}, 'C' => {1 => 20}, 'D' => {1 => 15}}   
   
-  parsers = { HashParser => hash_rules, YAMLParser => File.join(File.dirname(__FILE__), '..', 'bin', 'rules.yml') }
+  parsers = { 
+    nil => hash_rules, 
+    YAMLParser => File.join(File.dirname(__FILE__), '..', 'bin', 'rules.yml'), 
+    JSONParser => hash_rules.to_json
+  }
 
-  parsers.each do |parser, rule|
+  parsers.each do |parser, rules|
     describe "with #{parser}" do
-      let(:pricing) { Pricing.new(parser, rule) }
+      let(:pricing) { Pricing.new(rules, parser) }
       let(:checkout) { Checkout.new(pricing) }
     
       describe "individual scans" do

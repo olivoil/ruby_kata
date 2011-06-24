@@ -1,9 +1,9 @@
 class Pricing
   attr_accessor :parser, :rules
   
-  def initialize(parser = HashParser, rules)
-    @parser = parser.new
-    @rules  = sort_rules @parser.parse(rules)
+  def initialize(rules, parser = nil)
+    @parser = parser ? parser.new : nil
+    @rules  = sort_rules(@parser ? @parser.parse(rules) : rules)
   end
   
   def price(sku, qty = 1)
@@ -11,14 +11,14 @@ class Pricing
     remaining_qty = qty
   
     deals.inject(0) do |sum, deal|
-      sku_qty, deal_total = find_best_combination_for(remaining_qty, deal)
+      sku_qty, deal_total = find_best_qty_for(remaining_qty, deal)
       remaining_qty -= sku_qty
       sum += deal_total
     end
   end
 
   private
-    def find_best_combination_for desired_qty, deal
+    def find_best_qty_for desired_qty, deal
       deal_qty, deal_price = deal
       number_of_deals = desired_qty / deal_qty
       
